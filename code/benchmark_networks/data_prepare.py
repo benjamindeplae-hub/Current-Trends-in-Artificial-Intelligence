@@ -164,19 +164,21 @@ def prepare_data(EEG_all, noise_all, combin_num, train_per, noise_type):
     # combin eeg and noise for test set 
     EEG_test = []
     noise_EEG_test = []
+    noise_test_adjust = []
     for i in range(10):
-        
+
         noise_eeg_test = []
         for j in range(eeg_test.shape[0]):
             eeg = eeg_test[j]
             noise = noise_test[j]
-            
+
             coe = get_rms(eeg) / (get_rms(noise) * SNR_test[i])
             noise = noise * coe
             neeg = noise + eeg
-            
+
             noise_eeg_test.append(neeg)
-        
+            noise_test_adjust.append(noise)
+
         EEG_test.extend(eeg_test)
         noise_EEG_test.extend(noise_eeg_test)
 
@@ -205,7 +207,8 @@ def prepare_data(EEG_all, noise_all, combin_num, train_per, noise_type):
     std_VALUE = np.array(std_VALUE)
     noiseEEG_test_end_standard = np.array(noiseEEG_test_end_standard)
     EEG_test_end_standard = np.array(EEG_test_end_standard)
+    noise_test_adjust = np.array(noise_test_adjust) / std_VALUE[:, np.newaxis]
     print('test data prepared, test data shape: ', noiseEEG_test_end_standard.shape, EEG_test_end_standard.shape)
 
-    return noiseEEG_train_end_standard, EEG_train_end_standard, noiseEEG_val_end_standard, EEG_val_end_standard, noiseEEG_test_end_standard, EEG_test_end_standard, std_VALUE
+    return noiseEEG_train_end_standard, EEG_train_end_standard, noiseEEG_val_end_standard, EEG_val_end_standard, noiseEEG_test_end_standard, EEG_test_end_standard, std_VALUE, noise_test_adjust
   
