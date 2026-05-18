@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./code/benchmark_networks"
+    ]
+}
